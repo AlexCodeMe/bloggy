@@ -81,17 +81,6 @@ export default function AIChatBox({ open, onClose }: AIChatBoxProps) {
                 You can ask the chatbot any question about me and it will find
                 the relevant information on this website.
               </p>
-              <p className="text-sm text-muted-foreground">
-                If you want to learn how to build your own AI chatbot, check
-                out the tutorial on the{" "}
-                <a
-                  href="https://www.youtube.com/c/codinginflow?sub_confirmation=1"
-                  className="text-primary hover:underline"
-                >
-                  Coding in Flow YouTube channel
-                </a>
-                .
-              </p>
             </div>
           )}
         </div>
