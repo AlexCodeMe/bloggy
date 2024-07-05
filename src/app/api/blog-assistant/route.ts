@@ -10,23 +10,39 @@ export async function POST(req: Request) {
 
         const systemMessage: ChatCompletionMessageParam = {
             role: 'system',
-            content: `You are an AI assistant for the blog 'Bloggy'. Your task is to generate blog content based on the user's input. 
-            Do not engage in conversation or ask questions. Instead, expand on the given topic or phrase to create relevant blog content. 
-            If the input is too vague, generate a short, general blog paragraph related to the topic. 
-            Always write in a blog-style format, ready to be inserted into a post.`
+            content: `You are an AI assistant for the blog 'Bloggy'. Your task is to generate comprehensive blog content based on the user's input. 
+            Create a full-length blog post with multiple sections, each covering a different aspect of the topic.
+            Format the output as follows:
+            Title: [Blog Post Title]
+
+            Section 1: [Section Title]
+            [Section 1 content]
+
+            Section 2: [Section Title]
+            [Section 2 content]
+
+            Section 3: [Section Title]
+            [Section 3 content]
+
+            Conclusion:
+            [Concluding paragraph]
+
+            Aim for a total word count between 1000-1600 words.
+            If the input is vague, use your creativity to expand on the topic and provide valuable insights.`
         }
 
         const userMessage = messages[messages.length - 1].content
 
         const promptMessage: ChatCompletionMessageParam = {
             role: 'user',
-            content: `Generate a blog paragraph about or related to: "${userMessage}"`
+            content: `Generate a comprehensive blog post about: "${userMessage}". Format the post as instructed, with multiple sections covering various aspects of the topic.`
         }
 
         const response = await openai.chat.completions.create({
             model: 'gpt-3.5-turbo',
             messages: [systemMessage, promptMessage],
-            max_tokens: 150
+            max_tokens: 1000,
+            temperature: 0.7
         })
 
         return Response.json(response.choices[0].message)

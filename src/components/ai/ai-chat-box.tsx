@@ -27,7 +27,7 @@ export default function AIChatBox({ open, onClose }: AIChatBoxProps) {
     isLoading,
     error,
   } = useChat({
-    api: '/api/chat',
+    api: "/api/chat",
   })
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -54,11 +54,11 @@ export default function AIChatBox({ open, onClose }: AIChatBoxProps) {
       const response = await fetch("/api/synonyms-antonyms", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ words: [input.trim()] }),
+        body: JSON.stringify({ word: input.trim() }), // Change this line
       })
 
       if (!response.ok) {
-        throw new Error('Failed to fetch synonyms and antonyms')
+        throw new Error("Failed to fetch synonyms and antonyms")
       }
 
       const data = await response.json()
@@ -67,25 +67,28 @@ export default function AIChatBox({ open, onClose }: AIChatBoxProps) {
       const userMessage: Message = {
         id: Date.now().toString(),
         role: "user",
-        content: `Find synonyms and antonyms for: ${input}`
+        content: `Find synonyms and antonyms for: ${input}`,
       }
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: data.result
+        content: data.result,
       }
 
       // Update messages
       setMessages([...messages, userMessage, aiMessage])
 
       // Clear the input after processing
-      handleInputChange({ target: { value: '' } } as ChangeEvent<HTMLInputElement>)
+      handleInputChange({
+        target: { value: "" },
+      } as ChangeEvent<HTMLInputElement>)
     } catch (error) {
       console.error("Error fetching synonyms and antonyms:", error)
       const errorMessage: Message = {
         id: Date.now().toString(),
         role: "assistant",
-        content: "Sorry, I couldn't find synonyms and antonyms at the moment. Please try again later."
+        content:
+          "Sorry, I couldn't find synonyms and antonyms at the moment. Please try again later.",
       }
       setMessages([...messages, errorMessage])
     }
@@ -151,14 +154,15 @@ export default function AIChatBox({ open, onClose }: AIChatBoxProps) {
             ref={inputRef}
           />
           <button
-            type="submit"
-            className="flex w-10 flex-none items-center justify-center disabled:opacity-50"
+            type='submit'
+            className='flex w-10 flex-none items-center justify-center disabled:opacity-50'
             disabled={input.length === 0}
-            title="Submit message"
+            title='Submit message'
           >
             <SendHorizontal size={24} />
           </button>
           <button
+            type='button'
             className='flex w-10 flex-none items-center justify-center disabled:opacity-50'
             title='Synonyms and Antonyms'
             disabled={isLoading}

@@ -7,11 +7,11 @@ export default async function BlogIdPage({ params }: { params: { blogId: string 
   const { post } = await getPost(params.blogId)
 
   if (!post) {
-    return <div className="container mx-auto px-4 py-8">Post not found</div>
+    return <div className="px-4 py-8">Post not found</div>
   }
 
   return (
-    <article className="container mx-auto px-4 py-8 max-w-3xl">
+    <article className="px-4 py-8 max-w-3xl">
       <header className="mb-8">
         <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
         <div className="flex items-center text-sm text-gray-500 mb-4">
@@ -34,7 +34,7 @@ export default async function BlogIdPage({ params }: { params: { blogId: string 
           </div>
         )}
         {post.description && (
-          <p className="text-xl text-gray-600 dark:text-gray-300">{post.description}</p>
+          <p className="text-xl text-black/80 dark:text-gray-300">{post.description}</p>
         )}
       </header>
       

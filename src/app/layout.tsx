@@ -4,6 +4,7 @@ import "./globals.css"
 import { ThemeProvider } from "next-themes"
 import Footer from "@/components/layout/footer"
 import Navbar from "@/components/layout/navbar"
+import ToastProvider from "@/components/custom/toast-provider"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -23,6 +24,7 @@ export default function RootLayout({
         <ThemeProvider attribute='class'>
           <Navbar />
           <main className='mx-auto px-3 py-10 bg-gradient-to-b from-blue-400 via-orange-400 to-rose-800'>
+            <ToastProvider />
             {children}
           </main>
           <Footer />

@@ -9,10 +9,14 @@ import React, { ChangeEvent, FormEvent, useState } from "react"
 import { z } from "zod"
 import RichEditor from "../custom/rich-editor"
 import { Loader2 } from "lucide-react"
+import ContentModal from "../custom/content-modal"
+import toast from "react-hot-toast"
 
 export default function CreatePostForm() {
   const router = useRouter()
 
+  const [showModal, setShowModal] = useState(false)
+  const [generatedContent, setGeneratedContent] = useState("")
   const [aiSuggestion, setAiSuggestion] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -24,6 +28,7 @@ export default function CreatePostForm() {
 
   async function handleAiAssist() {
     setIsLoading(true)
+
     try {
       const response = await fetch("/api/blog-assistant", {
         method: "POST",
@@ -34,8 +39,11 @@ export default function CreatePostForm() {
           messages: [{ role: "user", content: formData.content }],
         }),
       })
+
       const data = await response.json()
+
       setAiSuggestion(data.content)
+      setShowModal(true)
     } catch (error) {
       console.error("Failed to get AI suggestion:", error)
       setAiSuggestion("Failed to get AI suggestion. Please try again.")
@@ -129,11 +137,15 @@ export default function CreatePostForm() {
               onClientUploadComplete={(res) => {
                 if (res && res[0]) {
                   setFormData((prev) => ({ ...prev, bannerImage: res[0].url }))
-                  alert("Upload Completed")
+                  toast.success("Upload Completed", {
+                    duration: 5000,
+                  })
                 }
               }}
               onUploadError={(error: Error) => {
-                alert(`ERROR! ${error.message}`)
+                toast.error(`ERROR! ${error.message}`, {
+                  duration: 5000,
+                })
               }}
             />
           </div>
@@ -179,26 +191,47 @@ export default function CreatePostForm() {
           </div>
         )}
         <div className='flex justify-between gap-4 pt-4'>
-        <button
-  type='button'
-  onClick={handleAiAssist}
-  disabled={isLoading}
-  className='flex items-center px-6 py-3 bg-indigo-600 text-white text-lg rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
->
-  {isLoading ? (
-    <Loader2 className='text-white size-4 animate-spin mr-2' />
-  ) : (
-    <>✨ AI Assist</>
-  )}
-</button>
+          <div className='flex gap-4'>
+            <button
+            type='button'
+            onClick={() => {}}
+            disabled={isLoading}
+            className='flex items-center px-6 py-3 bg-indigo-600 text-white text-lg rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+          >
+            {isLoading ? (
+              <Loader2 className='text-white size-4 animate-spin mr-2' />
+            ) : (
+              <>Preview</>
+            )}
+          </button>
+            <button
+            type='button'
+            onClick={handleAiAssist}
+            disabled={isLoading}
+            className='flex items-center px-6 py-3 bg-indigo-600 text-white text-lg rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+          >
+            {isLoading ? (
+              <Loader2 className='text-white size-4 animate-spin mr-2' />
+            ) : (
+              <>✨ AI Assist</>
+            )}
+          </button>
+          </div>
           <button
             type='submit'
             className='px-6 py-3 bg-green-600 text-white text-lg rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
           >
-            Publish Post
+            Publish
           </button>
         </div>
       </form>
+
+      {showModal && (
+        <ContentModal
+          content={aiSuggestion}
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </div>
   )
 }

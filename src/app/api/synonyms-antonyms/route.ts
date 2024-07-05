@@ -5,6 +5,10 @@ export async function POST(req: Request) {
     const body = await req.json()
     const { word } = body
 
+    if (!word || typeof word !== 'string') {
+      return Response.json({ error: "Invalid input" }, { status: 400 })
+    }
+
     const openai = new OpenAI()
 
     const response = await openai.chat.completions.create({

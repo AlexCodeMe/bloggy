@@ -26,14 +26,24 @@ model Post {
   updatedAt   DateTime @updatedAt
 
   // link post to user
+  // link post to comments
   // link post to category
   // link post to tags
 }
 
 // model Category {
-
+// // link Category to post
 // }
 
 // model Tag {
-
+// // link Tags to post
 // }
+
+model Comment {
+  id        String   @id @default(cuid())
+  message   String
+  createdAt DateTime @default(now())
+
+  // link comment to user
+  // link comment to post
+}
