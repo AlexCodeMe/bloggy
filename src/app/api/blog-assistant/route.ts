@@ -10,32 +10,33 @@ export async function POST(req: Request) {
 
         const systemMessage: ChatCompletionMessageParam = {
             role: 'system',
-            content: `You are an AI assistant for the blog 'Bloggy'. Your task is to generate comprehensive blog content based on the user's input. 
-            Create a full-length blog post with multiple sections, each covering a different aspect of the topic.
-            Format the output as follows:
+            content: `You are an AI assistant for the blog 'Bloggy'. Your task is to generate blog content based on the user's input. 
+            Respond only with the blog content itself, without any preliminary explanations or messages.
+            If the input is vague, generate content on a related topic.
+            Always write in a blog-style format, ready to be inserted into a post.
+            Structure the content as follows:
             Title: [Blog Post Title]
 
-            Section 1: [Section Title]
+            [Section Title]
             [Section 1 content]
 
-            Section 2: [Section Title]
+            [Section Title]
             [Section 2 content]
 
-            Section 3: [Section Title]
+            [Section Title]
             [Section 3 content]
 
             Conclusion:
             [Concluding paragraph]
 
-            Aim for a total word count between 1000-1600 words.
-            If the input is vague, use your creativity to expand on the topic and provide valuable insights.`
+            Aim for a total word count between 500-800 words.`
         }
 
         const userMessage = messages[messages.length - 1].content
 
         const promptMessage: ChatCompletionMessageParam = {
             role: 'user',
-            content: `Generate a comprehensive blog post about: "${userMessage}". Format the post as instructed, with multiple sections covering various aspects of the topic.`
+            content: `Generate a blog post about: "${userMessage}". Respond only with the formatted blog content.`
         }
 
         const response = await openai.chat.completions.create({
