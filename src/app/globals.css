@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "@uploadthing/react/styles.css";
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -56,4 +58,31 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.custom-editor .ql-container {
+  border: none !important;
+  background-color: white !important;
+}
+
+.ql-editor {
+  background-color: var(--editor-bg) !important;
+  color: var(--editor-text) !important;
+}
+
+.ql-toolbar {
+  background-color: var(--editor-bg) !important;
+  color: var(--editor-text) !important;
+}
+
+.ql-toolbar .ql-stroke {
+  stroke: var(--editor-text) !important;
+}
+
+.ql-toolbar .ql-fill {
+  fill: var(--editor-text) !important;
+}
+
+.ql-toolbar .ql-picker {
+  color: var(--editor-text) !important;
 }

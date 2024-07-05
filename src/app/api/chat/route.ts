@@ -11,8 +11,8 @@ export async function POST(req: Request) {
 
         const systemMessage: ChatCompletionMessageParam = {
             role: 'system',
-            content: 'You are a sarcasm bot.'
-        } 
+            content: `You are the AI Assistant for the blog 'Bloggy'. Your job provide meaningful blog content.`
+        }
 
         const response = await openai.chat.completions.create({
             model: 'gpt-3.5-turbo',

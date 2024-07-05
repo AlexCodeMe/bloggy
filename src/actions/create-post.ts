@@ -8,7 +8,7 @@ export async function createPost(values: z.infer<typeof PostSchema>) {
   const validatedFields = PostSchema.safeParse(values)
   if (!validatedFields.success) return { error: "invalid fields" }
 
-  const { title, description, content } = validatedFields.data
+  const { title, description, content, bannerImage } = validatedFields.data
 
   try {
     const newPost = await db.post.create({
@@ -16,6 +16,7 @@ export async function createPost(values: z.infer<typeof PostSchema>) {
         title,
         description,
         content,
+        bannerImage,
       },
     })
 
