@@ -177,7 +177,7 @@ export default function CreatePostForm() {
           />
         </div>
 
-        {aiSuggestion && (
+        {/* {aiSuggestion && (
           <div className='mt-4'>
             <h3 className='text-lg font-bold'>AI Suggestion:</h3>
             <p>{aiSuggestion}</p>
@@ -189,7 +189,7 @@ export default function CreatePostForm() {
               Insert Suggestion
             </button>
           </div>
-        )}
+        )} */}
         <div className='flex justify-between gap-4 pt-4'>
           <div className='flex gap-4'>
             <button
@@ -230,6 +230,7 @@ export default function CreatePostForm() {
         <ContentModal
           content={aiSuggestion}
           onClose={() => setShowModal(false)}
+          onInsert={insertSuggestion}
         />
       )}
     </div>
