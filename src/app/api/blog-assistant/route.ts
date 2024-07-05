@@ -26,7 +26,7 @@ export async function POST(req: Request) {
         const response = await openai.chat.completions.create({
             model: 'gpt-3.5-turbo',
             messages: [systemMessage, promptMessage],
-            max_tokens: 150  // Adjust this for desired length
+            max_tokens: 150
         })
 
         return Response.json(response.choices[0].message)

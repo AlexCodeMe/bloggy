@@ -1,8 +1,15 @@
 import { cn } from "@/lib/utils"
 import { Message, useChat } from "ai/react"
-import { Bot, SendHorizontal, Trash, XCircle } from "lucide-react"
+import {
+  Bot,
+  LucideSpellCheck2,
+  SendHorizontal,
+  Shuffle,
+  Trash,
+  XCircle,
+} from "lucide-react"
 import Link from "next/link"
-import { useEffect, useRef } from "react"
+import { ChangeEvent, useEffect, useRef } from "react"
 import ReactMarkdown from "react-markdown"
 
 interface AIChatBoxProps {
@@ -19,7 +26,9 @@ export default function AIChatBox({ open, onClose }: AIChatBoxProps) {
     setMessages,
     isLoading,
     error,
-  } = useChat()
+  } = useChat({
+    api: '/api/chat',
+  })
 
   const inputRef = useRef<HTMLInputElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -37,6 +46,50 @@ export default function AIChatBox({ open, onClose }: AIChatBoxProps) {
   }, [open])
 
   const lastMessageIsUser = messages[messages.length - 1]?.role === "user"
+
+  async function handleSynonyms() {
+    if (input.trim() === "") return
+
+    try {
+      const response = await fetch("/api/synonyms-antonyms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ words: [input.trim()] }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch synonyms and antonyms')
+      }
+
+      const data = await response.json()
+
+      // Create new messages
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        role: "user",
+        content: `Find synonyms and antonyms for: ${input}`
+      }
+      const aiMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: data.result
+      }
+
+      // Update messages
+      setMessages([...messages, userMessage, aiMessage])
+
+      // Clear the input after processing
+      handleInputChange({ target: { value: '' } } as ChangeEvent<HTMLInputElement>)
+    } catch (error) {
+      console.error("Error fetching synonyms and antonyms:", error)
+      const errorMessage: Message = {
+        id: Date.now().toString(),
+        role: "assistant",
+        content: "Sorry, I couldn't find synonyms and antonyms at the moment. Please try again later."
+      }
+      setMessages([...messages, errorMessage])
+    }
+  }
 
   return (
     <div
@@ -75,11 +128,8 @@ export default function AIChatBox({ open, onClose }: AIChatBoxProps) {
             <div className='mx-8 flex h-full flex-col items-center justify-center gap-3 text-center'>
               <Bot size={28} />
               <p className='text-lg font-medium'>
-                Send a message to start the AI chat!
-              </p>
-              <p>
-                You can ask the chatbot any question about me and it will find
-                the relevant information on this website.
+                Hello, I&apos;m Bloggy! I can provide you with synonyms and
+                antonyms. Type in a word or phase and I&apos;ll help you.
               </p>
             </div>
           )}
@@ -96,17 +146,25 @@ export default function AIChatBox({ open, onClose }: AIChatBoxProps) {
           <input
             value={input}
             onChange={handleInputChange}
-            placeholder='Say something...'
+            placeholder='Enter word(s) for suggestions...'
             className='grow rounded border bg-background px-3 py-2'
             ref={inputRef}
           />
           <button
-            type='submit'
-            className='flex w-10 flex-none items-center justify-center disabled:opacity-50'
+            type="submit"
+            className="flex w-10 flex-none items-center justify-center disabled:opacity-50"
             disabled={input.length === 0}
-            title='Submit message'
+            title="Submit message"
           >
             <SendHorizontal size={24} />
+          </button>
+          <button
+            className='flex w-10 flex-none items-center justify-center disabled:opacity-50'
+            title='Synonyms and Antonyms'
+            disabled={isLoading}
+            onClick={handleSynonyms}
+          >
+            <Shuffle />
           </button>
         </form>
       </div>

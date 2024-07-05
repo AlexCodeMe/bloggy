@@ -7,7 +7,7 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import React, { ChangeEvent, FormEvent, useState } from "react"
 import { z } from "zod"
-import RichEditor from "./custom/rich-editor"
+import RichEditor from "../custom/rich-editor"
 import { Loader2 } from "lucide-react"
 
 export default function CreatePostForm() {
@@ -82,11 +82,11 @@ export default function CreatePostForm() {
   }
 
   return (
-    <div className='max-w-fullmx-auto py-8'>
+    <div className='max-w-full mx-auto py-8'>
       <h1 className='text-4xl font-bold mb-8'>Create New Blog Post</h1>
       <form onSubmit={handleSubmit} className='space-y-8'>
-        <div className='flex justify-between items-center space-x-8'>
-          <div>
+        <div className='flex flex-col md:flex-row justify-between items-start space-y-8 md:space-y-0 md:space-x-8'>
+          <div className='w-full md:w-[400px]'>
             <label htmlFor='title' className='block text-lg font-medium mb-2'>
               Title
             </label>
@@ -95,12 +95,12 @@ export default function CreatePostForm() {
               name='title'
               type='text'
               required
-              className='w-[400px] px-4 py-2 text-xl border-b border-gray-300 focus:outline-none focus:border-indigo-500'
+              className='w-full px-4 py-2 text-xl border-b border-gray-300 focus:outline-none focus:border-indigo-500'
               value={formData.title}
               onChange={handleChange}
             />
           </div>
-          <div>
+          <div className='w-full md:w-[400px]'>
             <label
               htmlFor='description'
               className='block text-lg font-medium mb-2'
@@ -112,7 +112,7 @@ export default function CreatePostForm() {
               name='description'
               type='text'
               required
-              className='w-[400px] px-4 py-2 text-lg border-b border-gray-300 focus:outline-none focus:border-indigo-500'
+              className='w-full px-4 py-2 text-lg border-b border-gray-300 focus:outline-none focus:border-indigo-500'
               value={formData.description}
               onChange={handleChange}
             />
@@ -179,18 +179,18 @@ export default function CreatePostForm() {
           </div>
         )}
         <div className='flex justify-between gap-4 pt-4'>
-          <button
-            type='button'
-            onClick={handleAiAssist}
-            disabled={isLoading}
-            className='flex items-center px-6 py-3 bg-indigo-600 text-white text-lg rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-          >
-            {isLoading ? (
-              <Loader2 className='text-gold size-4 animate-spin' />
-            ) : (
-              "✨"
-            )}
-          </button>
+        <button
+  type='button'
+  onClick={handleAiAssist}
+  disabled={isLoading}
+  className='flex items-center px-6 py-3 bg-indigo-600 text-white text-lg rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+>
+  {isLoading ? (
+    <Loader2 className='text-white size-4 animate-spin mr-2' />
+  ) : (
+    <>✨ AI Assist</>
+  )}
+</button>
           <button
             type='submit'
             className='px-6 py-3 bg-green-600 text-white text-lg rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'

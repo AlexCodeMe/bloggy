@@ -7,6 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id       String  @id @default(cuid())
+  username String  @unique
+  password String
+  name     String?
+
+  // Link user to posts
+}
+
 model Post {
   id          String   @id @default(cuid())
   title       String
@@ -16,10 +25,9 @@ model Post {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  // categoryId String?
-  // category   Category? @relation(fields: [categoryId], references: [id])
-
-  // tags Tag[] @relation("PostToTag")
+  // link post to user
+  // link post to category
+  // link post to tags
 }
 
 // model Category {
