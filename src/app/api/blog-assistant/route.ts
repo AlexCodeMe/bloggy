@@ -29,7 +29,7 @@ export async function POST(req: Request) {
             Conclusion:
             [Concluding paragraph]
 
-            Aim for a total word count between 1000-1600 words.`,
+            Aim for a total word count between 2000-3600 words.`,
     }
 
     const userMessage = messages[messages.length - 1].content

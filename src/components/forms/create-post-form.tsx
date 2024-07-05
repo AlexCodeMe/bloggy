@@ -16,7 +16,6 @@ export default function CreatePostForm() {
   const router = useRouter()
 
   const [showModal, setShowModal] = useState(false)
-  const [generatedContent, setGeneratedContent] = useState("")
   const [aiSuggestion, setAiSuggestion] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -52,11 +51,49 @@ export default function CreatePostForm() {
   }
 
   function insertSuggestion() {
+    function escapeHtml(unsafe: string) {
+      return unsafe
+        .replace(/&/g, "&amp")
+        .replace(/</g, "&lt")
+        .replace(/>/g, "&gt")
+        .replace(/"/g, "&quot")
+        .replace(/'/g, "&#039")
+    }
+
+    let currentTag = ""
+    const formattedContent = aiSuggestion
+      .split("\n")
+      .map((line, index, array) => {
+        line = line.trim()
+        if (!line) return ""
+
+        if (line.startsWith("Title:")) {
+          return `<h1>${escapeHtml(line.replace("Title:", "").trim())}</h1>`
+        } else if (line === "Conclusion:") {
+          currentTag = "conclusion"
+          return "<h2>Conclusion</h2>"
+        } else if (line.match(/^[A-Z][\w\s]+:?$/)) {
+          currentTag = "section"
+          return `<h2>${escapeHtml(line.replace(":", ""))}</h2>`
+        } else {
+          const escapedLine = escapeHtml(line)
+          if (currentTag === "conclusion" && index === array.length - 1) {
+            return `<p class="conclusion">${escapedLine}</p>`
+          } else if (currentTag === "section" || currentTag === "conclusion") {
+            return `<p>${escapedLine}</p>`
+          } else {
+            return `<p class="introduction">${escapedLine}</p>`
+          }
+        }
+      })
+      .join("")
+
     setFormData((prev) => ({
       ...prev,
-      content: prev.content + "\n" + aiSuggestion,
+      content: prev.content + formattedContent,
     }))
     setAiSuggestion("")
+    setShowModal(false)
   }
 
   function handleChange(
@@ -176,46 +213,32 @@ export default function CreatePostForm() {
             className='w-full px-4 py-2 text-lg custom-editor'
           />
         </div>
-
-        {/* {aiSuggestion && (
-          <div className='mt-4'>
-            <h3 className='text-lg font-bold'>AI Suggestion:</h3>
-            <p>{aiSuggestion}</p>
-            <button
-              type='button'
-              onClick={insertSuggestion}
-              className='mt-2 px-4 py-2 bg-green-600 text-white rounded'
-            >
-              Insert Suggestion
-            </button>
-          </div>
-        )} */}
         <div className='flex justify-between gap-4 pt-4'>
           <div className='flex gap-4'>
             <button
-            type='button'
-            onClick={() => {}}
-            disabled={isLoading}
-            className='flex items-center px-6 py-3 bg-indigo-600 text-white text-lg rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-          >
-            {isLoading ? (
-              <Loader2 className='text-white size-4 animate-spin mr-2' />
-            ) : (
-              <>Preview</>
-            )}
-          </button>
+              type='button'
+              onClick={() => {}}
+              disabled={isLoading}
+              className='flex items-center px-6 py-3 bg-indigo-600 text-white text-lg rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+            >
+              {isLoading ? (
+                <Loader2 className='text-white size-4 animate-spin mr-2' />
+              ) : (
+                <>Preview</>
+              )}
+            </button>
             <button
-            type='button'
-            onClick={handleAiAssist}
-            disabled={isLoading}
-            className='flex items-center px-6 py-3 bg-indigo-600 text-white text-lg rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-          >
-            {isLoading ? (
-              <Loader2 className='text-white size-4 animate-spin mr-2' />
-            ) : (
-              <>✨ AI Assist</>
-            )}
-          </button>
+              type='button'
+              onClick={handleAiAssist}
+              disabled={isLoading}
+              className='flex items-center px-6 py-3 bg-indigo-600 text-white text-lg rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+            >
+              {isLoading ? (
+                <Loader2 className='text-white size-4 animate-spin mr-2' />
+              ) : (
+                <>✨ AI Assist</>
+              )}
+            </button>
           </div>
           <button
             type='submit'
