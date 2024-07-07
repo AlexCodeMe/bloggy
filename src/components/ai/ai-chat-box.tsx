@@ -132,7 +132,7 @@ export default function AIChatBox({ open, onClose }: AIChatBoxProps) {
               <Bot size={28} />
               <p className='text-lg font-medium'>
                 Hello, I&apos;m Bloggy! I can provide you with synonyms and
-                antonyms. Type in a word or phase and I&apos;ll help you.
+                antonyms and I&apos;m always up for a silly convo!
               </p>
             </div>
           )}
