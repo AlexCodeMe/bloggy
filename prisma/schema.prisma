@@ -8,12 +8,12 @@ datasource db {
 }
 
 model User {
-  id       String  @id @default(cuid())
-  username String  @unique
+  id       String    @id @default(cuid())
+  username String    @unique
   password String
   name     String?
-
-  // Link user to posts
+  // posts    Post[]
+  // comments Comment[]
 }
 
 model Post {
@@ -25,25 +25,38 @@ model Post {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  // link post to user
-  // link post to comments
-  // link post to category
-  // link post to tags
+  // author   User   @relation(fields: [authorId], references: [id])
+  // authorId String
+
+  // category   Category? @relation(fields: [categoryId], references: [id])
+  // categoryId String?
+
+  // tags     Tag[]
+  // comments Comment[]
 }
 
 // model Category {
-// // link Category to post
+//   id   String @id @default(cuid())
+//   name String @unique
+
+//   posts Post[]
 // }
 
 // model Tag {
-// // link Tags to post
+//   id   String @id @default(cuid())
+//   name String @unique
+
+//   posts Post[]
 // }
 
-model Comment {
-  id        String   @id @default(cuid())
-  message   String
-  createdAt DateTime @default(now())
+// model Comment {
+//   id        String   @id @default(cuid())
+//   message   String
+//   createdAt DateTime @default(now())
 
-  // link comment to user
-  // link comment to post
-}
+//   author   User   @relation(fields: [authorId], references: [id])
+//   authorId String
+
+//   post   Post   @relation(fields: [postId], references: [id])
+//   postId String
+// }

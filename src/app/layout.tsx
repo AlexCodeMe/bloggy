@@ -1,12 +1,12 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { DM_Sans } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "next-themes"
 import Footer from "@/components/layout/footer"
 import Navbar from "@/components/layout/navbar"
 import ToastProvider from "@/components/custom/toast-provider"
 
-const inter = Inter({ subsets: ["latin"] })
+const font = DM_Sans({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,10 +20,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en' suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={font.className}>
         <ThemeProvider attribute='class'>
           <Navbar />
-          <main className='mx-auto px-3 py-10 bg-gradient-to-b from-blue-400 via-orange-400 to-rose-800'>
+          <main className='bg-gradient-to-b from-blue-400 via-orange-400 to-rose-800'>
             <ToastProvider />
             {children}
           </main>

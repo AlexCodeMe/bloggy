@@ -26,4 +26,5 @@ export const PostSchema = z.object({
   description: z.string().optional(),
   content: z.string().min(1, "Content is required"),
   bannerImage: z.string().optional(),
+  cateogyrId: z.string().optional(),
 })

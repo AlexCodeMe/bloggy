@@ -34,9 +34,7 @@ export default function CreatePostForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          messages: [{ role: "user", content: formData.content }],
-        }),
+        body: JSON.stringify(formData),
       })
 
       const data = await response.json()
@@ -60,7 +58,7 @@ export default function CreatePostForm() {
         .replace(/'/g, "&#039")
     }
 
-    let currentTag = ""
+    let current = ""
     const formattedContent = aiSuggestion
       .split("\n")
       .map((line, index, array) => {
@@ -70,16 +68,16 @@ export default function CreatePostForm() {
         if (line.startsWith("Title:")) {
           return `<h1>${escapeHtml(line.replace("Title:", "").trim())}</h1>`
         } else if (line === "Conclusion:") {
-          currentTag = "conclusion"
+          current = "conclusion"
           return "<h2>Conclusion</h2>"
         } else if (line.match(/^[A-Z][\w\s]+:?$/)) {
-          currentTag = "section"
+          current = "section"
           return `<h2>${escapeHtml(line.replace(":", ""))}</h2>`
         } else {
           const escapedLine = escapeHtml(line)
-          if (currentTag === "conclusion" && index === array.length - 1) {
+          if (current === "conclusion" && index === array.length - 1) {
             return `<p class="conclusion">${escapedLine}</p>`
-          } else if (currentTag === "section" || currentTag === "conclusion") {
+          } else if (current === "section" || current === "conclusion") {
             return `<p>${escapedLine}</p>`
           } else {
             return `<p class="introduction">${escapedLine}</p>`
@@ -213,6 +211,7 @@ export default function CreatePostForm() {
             className='w-full px-4 py-2 text-lg custom-editor'
           />
         </div>
+        
         <div className='flex justify-between gap-4 pt-4'>
           <div className='flex gap-4'>
             <button
